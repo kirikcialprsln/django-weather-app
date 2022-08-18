@@ -1,0 +1,25 @@
+{%  extends 'partials/main.html' %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+
+{% load static %}
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h4 class="modal-title">Edit User</h4>
+
+    </div>
+    <div class="modal-body">
+        {{form}}
+    </div>
+    <div class="modal-footer">
+        <input type="submit" class="btn btn-success" value="edit">
+    </div>
+</form>
+
+
+{% endif %}
+{% endblock %}

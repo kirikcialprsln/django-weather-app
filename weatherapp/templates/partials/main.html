@@ -1,0 +1,70 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>CRM</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+
+        $(document).ready(function(){
+            $("#city-list").change(function(){
+                var city = $(this).val();
+                $.ajax({
+                    url:"/weather-api",
+                    type:"POST",
+                    dataType:"json",
+                    data:{city, csrfmiddlewaretoken: '{{ csrf_token }}'},
+                    success:function (result) {
+                        if(result.response.status){
+                            var theme = `
+                                <tr>
+                                    <td>
+                                        <figure class="image is-50x50">
+                                            <img src="http://openweathermap.org/img/w/${result.response.icon}.png" alt="Image">
+                                        </figure>
+                                    </td>
+                                    <td>${result.response.city}</td>
+                                    <td>${ result.response.temperature }</td>
+                                    <td> ${result.response.humidity}</td>
+                                    <td>${result.response.pressure}</td>
+                                    <td>${result.response.country}</td>
+                                    <td>${result.response.sunset}</td>
+                                    <td>${ result.response.description }</td>
+                                </tr>
+                            `;
+                            $("table tbody").html(theme);
+                        }else {
+                            alert(result.response.message)
+                        }
+
+
+                    }
+                })
+            })
+        })
+    </script>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}">
+    <script>
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+    </script>
+
+</head>
+<body>
+{% include 'partials/navbar.html' %}
+<div class="container-fluid">
+    {% block content %}
+
+
+    {% endblock %}
+</div>
+
+
+</body>
+
+</html>
